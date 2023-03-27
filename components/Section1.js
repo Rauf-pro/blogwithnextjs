@@ -21,17 +21,16 @@ export default function Section1() {
         <Swiper
         //   spaceBetween={50}
           slidesPerView={1}
-          loop={true}
-          autoplay={{
-            delay: 2000
-          }}
+          // loop={true}
+          // autoplay={{
+          //   delay: 2000
+          // }}
          
         >
           <SwiperSlide>{Slide()}</SwiperSlide>
           <SwiperSlide>{Slide()}</SwiperSlide>
           <SwiperSlide>{Slide()}</SwiperSlide>
           <SwiperSlide>{Slide()}</SwiperSlide>
-          ...
         </Swiper>
       </div>
     </section>
