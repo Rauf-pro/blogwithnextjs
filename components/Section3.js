@@ -50,7 +50,7 @@ function Post() {
           </div>
           <div className="title">
             <Link
-              className="text-xl  font-bold text-gray-800 hover:text-gray-600"
+              className="text-3xl md:text-4xl  font-bold text-gray-800 hover:text-gray-600"
               href={"/"}
             >
               Your must unhappy customers are your greatest source of learning
