@@ -19,7 +19,7 @@ export default function Page() {
             veniam. Neque tenetur pariatur ex consequuntur explicabo iusto!
           </p>
           <div className="py-10">
-            <Image src={"/images/img1.jpg"} width={900} height={600} alt="" />
+            <Image src={"/images/img1.jpg"} width={900} height={600} alt="image" />
           </div>
           <div className="content text-gray-600 text-lg flex flex-col gap-4">
             <p>

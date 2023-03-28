@@ -43,7 +43,7 @@ function Slide() {
     <div className="grid md:grid-cols-2 gap-8">
       <div className="image">
         <Link href={"/"}>
-          <Image src={"/images/img1.jpg"} width={600} height={600} alt="" />
+          <Image src={"/images/img1.jpg"} width={600} height={600} alt="image" />
         </Link>
       </div>
       <div className="info flex justify-center flex-col">
