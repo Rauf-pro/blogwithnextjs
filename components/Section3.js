@@ -10,6 +10,8 @@ export default function Section3() {
       {/* swiper */}
        <Swiper
         slidesPerView={2}
+        spaceBetween={50}
+      
        >
         <SwiperSlide>
          {Post()}
