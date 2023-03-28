@@ -23,7 +23,6 @@ function Post() {
             src={"/images/img1.jpg"}
             width={300}
             height={200}
-            
             className="rounded"
             alt=""
           />
