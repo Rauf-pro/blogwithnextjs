@@ -3,9 +3,28 @@ import Author from "../../components/_child/Author";
 import Format from "../../layout/Format";
 import Related from "../../components/_child/related";
 import getPost from "../../lib/helper";
+import fetcher from "../../lib/fetcher";
+import Spinner from "../../components/_child/spinner";
+import ErrorComponent from "../../components/_child/error";
+import { useRouter } from "next/router";
+import { SWRConfig } from "swr";
 
-export default function Page({title, img, subtitle, description, author }) {
+export default function Page({fallback}) {
+  const router = useRouter();
+  const { postId } = router.query;
 
+  const { data, isLoading, isError } = fetcher(`api/posts/${postId}`);
+
+  if (isLoading) return <Spinner></Spinner>;
+  if (isError) return <ErrorComponent></ErrorComponent>;
+
+  return (
+    <SWRConfig value={{fallback}}>
+      <Article {...data}></Article>
+    </SWRConfig>
+  );
+}
+function Article({ title, img, subtitle, description, author }) {
   return (
     <Format>
       <section className="container mx-auto md:px-2 py-16 w-1/2">
@@ -30,11 +49,15 @@ export default function Page({title, img, subtitle, description, author }) {
   );
 }
 
-export async function getStaticProps({params}) {
+export async function getStaticProps({ params }) {
   const posts = await getPost(params.postId);
 
   return {
-    props: posts,
+    props: {
+      fallback:{
+        'api/posts': posts
+      }
+    }
   };
 }
 
@@ -44,13 +67,13 @@ export async function getStaticPaths() {
   const paths = posts.map((value) => {
     return {
       params: {
-        postId : value.id.toString()
-      }
-    }
+        postId: value.id.toString(),
+      },
+    };
   });
 
   return {
     paths,
-    fallback: false
-  }
+    fallback: false,
+  };
 }
