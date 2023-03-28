@@ -2,8 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Author from "./_child/Author";
+import fetcher from "../lib/fetcher";
+import Error from "./_child/error";
+import Spinner from "./_child/spinner";
 
 export default function Section3() {
+  const {data, isLoading, isError} = fetcher('api/popular')
+
+  if(isLoading) return <Spinner/>
+  if(isError) return <Error/>
   return (
     <section className="container mx-auto md:px-20 py-16">
       <h1 className="font-bold text-4xl py-12 text-center">Most Popular</h1>
@@ -13,27 +20,22 @@ export default function Section3() {
         spaceBetween={50}
       
        >
-        <SwiperSlide>
-         {Post()}
-        </SwiperSlide>
-        <SwiperSlide>
-         {Post()}
-        </SwiperSlide>
-        <SwiperSlide>
-         {Post()}
-        </SwiperSlide>
+        {data.map((value, index) => (
+          <SwiperSlide key={index}><Post data={value}></Post></SwiperSlide>
+        ))}
        </Swiper>
     </section>
   );
 }
 
-function Post() {
+function Post({data}) {
+  const {id, title, category,img, published, description, author} = data;
     return (
       <div className="grid">
         <div className="images">
           <Link href={"/"}>
             <Image
-              src={"/images/img1.jpg"}
+              src={img || "/"}
               width={600}
               height={400}
               className="rounded"
@@ -44,10 +46,10 @@ function Post() {
         <div className="info flex justify-center flex-col py-4">
           <div className="cat">
             <Link href={"/"} className="text-orange-600 hover:text-orange-700">
-              Business. Travel
+              {category || "Unknown"}
             </Link>
             <Link href={"/"} className="text-gray-800 hover:text-gray-600">
-              January 3, 2022
+              {published || "Unknown"}
             </Link>
           </div>
           <div className="title">
@@ -55,15 +57,13 @@ function Post() {
               className="text-3xl md:text-4xl  font-bold text-gray-800 hover:text-gray-600"
               href={"/"}
             >
-              Your must unhappy customers are your greatest source of learning
+              {title || "Title"}
             </Link>
           </div>
           <p className="text-gray-500 py-3">
-            Even the all-powerful Pointing has no control about the blind texts it
-            is an almost unorthographic life One day however a small line of blind
-            text by the name Lorem ipsum dolor sit amet consectetur.
+            {description || "description"}
           </p>
-          <Author />
+          {author ? <Author/> : <></>}
         </div>
       </div>
     );

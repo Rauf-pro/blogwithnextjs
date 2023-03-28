@@ -6,8 +6,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, {Autoplay} from 'swiper'
 // Import Swiper styles
 import "swiper/css";
+import fetcher from "../lib/fetcher";
+import Error from "./_child/error";
+import Spinner from "./_child/spinner";
 
 export default function Section1() {
+  const {data, isLoading, isError} = fetcher('api/trending')
+
+  if(isLoading) return <Spinner/>
+  if(isError) return <Error/>
     SwiperCore.use([Autoplay])
     
   const bg = {
@@ -28,31 +35,31 @@ export default function Section1() {
           // }}
          
         >
-          <SwiperSlide>{Slide()}</SwiperSlide>
-          <SwiperSlide>{Slide()}</SwiperSlide>
-          <SwiperSlide>{Slide()}</SwiperSlide>
-          <SwiperSlide>{Slide()}</SwiperSlide>
+          {data.map((value,index) => (
+            <SwiperSlide key={index}><Slide data={value}></Slide></SwiperSlide>
+          ))}
         </Swiper>
       </div>
     </section>
   );
 }
 
-function Slide() {
+function Slide({data}) {
+  const {id, title, category,img, published, description, author} = data;
   return (
     <div className="grid md:grid-cols-2 gap-8">
       <div className="image">
         <Link href={"/"}>
-          <Image src={"/images/img1.jpg"} width={600} height={600} alt="image" />
+          <Image src={img || "/"} width={600} height={600} alt="image" />
         </Link>
       </div>
       <div className="info flex justify-center flex-col">
         <div className="cat">
           <Link href={"/"} className="text-orange-600 hover:text-orange-700">
-            Business. Travel
+            {category || "Unknown"}
           </Link>
           <Link href={"/"} className="text-gray-800 hover:text-gray-600">
-            January 3, 2022
+            {published || "Unknown"}
           </Link>
         </div>
         <div className="title">
@@ -60,15 +67,13 @@ function Slide() {
             className="text-3xl md:text-6xl font-bold text-gray-800 hover:text-gray-600"
             href={"/"}
           >
-            Your must unhappy customers are your greatest source of learning
+            {title || "Title"}
           </Link>
         </div>
         <p className="text-gray-500 py-3">
-          Even the all-powerful Pointing has no control about the blind texts it
-          is an almost unorthographic life One day however a small line of blind
-          text by the name Lorem ipsum dolor sit amet consectetur.
+          {description || "description"}
         </p>
-        <Author />
+        {author ? <Author/> : <></>}
       </div>
     </div>
   );
