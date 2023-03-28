@@ -1,4 +1,4 @@
-"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 import Author from "./_child/Author";
@@ -8,7 +8,8 @@ export default function Section2() {
 
   const {data, isLoading, isError} = fetcher('api/posts')
 
-  if(data)console.log(data)
+  if(isLoading) return <div>Loading...</div>
+  if(isError) return <div>Error</div>
   
   return (
     <section className="container mx-auto md:px-20 py-10">
@@ -16,24 +17,24 @@ export default function Section2() {
 
       {/*grid columns*/}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-14">
-        {Post()}
-        {Post()}
-        {Post()}
-        {Post()}
-        {Post()}
-        {Post()}
+        {
+          data.map((value, index) =>(
+            <Post data={value} key={index}></Post>
+          ))
+        }
       </div>
     </section>
   );
 }
 
-function Post() {
+function Post({data}) {
+  const {id, title, category,img, published, author} = data;
   return (
     <div className="item">
       <div className="images">
         <Link href={"/"}>
           <Image
-            src={"/images/img1.jpg"}
+            src={img || "/"}
             width={500}
             height={350}
             className="rounded"
@@ -44,10 +45,10 @@ function Post() {
       <div className="info flex justify-center flex-col py-4">
         <div className="cat">
           <Link href={"/"} className="text-orange-600 hover:text-orange-700">
-            Business. Travel
+            {category || "Unknown"}
           </Link>
           <Link href={"/"} className="text-gray-800 hover:text-gray-600">
-            January 3, 2022
+            {published || "Unknown"}
           </Link>
         </div>
         <div className="title">
@@ -55,7 +56,7 @@ function Post() {
             className="text-xl  font-bold text-gray-800 hover:text-gray-600"
             href={"/"}
           >
-            Your must unhappy customers are your greatest source of learning
+            {title || "Title"}
           </Link>
         </div>
         <p className="text-gray-500 py-3">
@@ -63,7 +64,7 @@ function Post() {
           is an almost unorthographic life One day however a small line of blind
           text by the name Lorem ipsum dolor sit amet consectetur.
         </p>
-        <Author />
+        {author ? <Author/> : <></>}
       </div>
     </div>
   );
